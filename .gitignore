@@ -1,0 +1,13 @@
+# Credenciais
+backend/.env
+backend/src/config/serviceAccountKey.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+venv/
+
+# VS Code
+.vscode/
