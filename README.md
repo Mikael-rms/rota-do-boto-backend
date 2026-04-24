@@ -3,9 +3,6 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688)
 ![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Status](https://img.shields.io/badge/Status-Prototype-yellow)
-![Contributions](https://img.shields.io/badge/Contributions-Welcome-brightgreen)
 
 Este é o backend do projeto **Rota do Boto**, desenvolvido com FastAPI e integrado ao Firebase (Firestore).
 
@@ -343,3 +340,6 @@ Se algo não funcionar:
 👉 90% dos erros são configuração incorreta
 
 ---
+## 👨‍💻 Autor
+
+Desenvolvido por **Mikael Ramos**
