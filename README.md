@@ -56,7 +56,9 @@ Firebase (Firestore + Auth)
 * Cloud Firestore
 
 ---
+
 Link para o repositório Frontend do Rota do Boto: https://github.com/Mikael-rms/rota-do-boto-frontend.git
+
 ---
 
 ### ⚙️ Configuração do ambiente (PASSO A PASSO)
