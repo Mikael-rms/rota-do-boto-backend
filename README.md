@@ -8,22 +8,64 @@ Este é o backend do projeto **Rota do Boto**, desenvolvido com FastAPI e integr
 
 ---
 
-# 📦 Tecnologias utilizadas
+### 📌 Visão Geral
+
+O **Rota do Boto** é uma aplicação que simula a compra de passagens de viagens fluviais, permitindo ao usuário:
+
+* Criar conta e autenticar-se
+* Buscar viagens disponíveis
+* Selecionar assentos
+* Adicionar ao carrinho
+* Finalizar compra
+* Visualizar histórico de pedidos
+
+O projeto foi desenvolvido com foco em **boas práticas de arquitetura**, separando frontend, backend e banco de dados.
+
+---
+
+### 🧠 Arquitetura do Sistema
+
+```
+Frontend (React)
+        ↓
+API Backend (FastAPI - Python)
+        ↓
+Firebase (Firestore + Auth)
+```
+
+---
+
+### ⚙️ Tecnologias Utilizadas
+
+ **`🖥️ Frontend`**
+
+* React.js
+* React Router DOM
+* Tailwind CSS
+* Context API
+
+ **`🔐 Backend`**
 
 * Python
 * FastAPI
 * Firebase Admin SDK
-* Firestore
+
+**`☁️ Backend-as-a-Service`**
+
+* Firebase Authentication
+* Cloud Firestore
 
 ---
+Link para o repositório Frontend do Rota do Boto: https://github.com/Mikael-rms/rota-do-boto-frontend.git
+---
 
-# ⚙️ Configuração do ambiente (PASSO A PASSO)
+### ⚙️ Configuração do ambiente (PASSO A PASSO)
 
 Siga todos os passos abaixo com atenção.
 
 ---
 
-## 1. Clonar o repositório
+ **`1. Clonar o repositório`**
 
 ```bash
 git clone https://github.com/Mikael-rms/rota-do-boto-backend.git
@@ -32,7 +74,7 @@ cd rota-do-boto-backend/backend
 
 ---
 
-## 2. Instalar dependências
+**`2. Instalar dependências`**
 
 ```bash
 pip install fastapi uvicorn firebase-admin python-dotenv
@@ -40,9 +82,9 @@ pip install fastapi uvicorn firebase-admin python-dotenv
 
 ---
 
-## 3. Configurar variáveis de ambiente (.env)
+**`3. Configurar variáveis de ambiente (.env)`**
 
-### 🔹 3.1 Criar o arquivo
+ 🔹 3.1 Criar o arquivo
 
 Na pasta `backend`, crie um arquivo chamado:
 
@@ -52,7 +94,7 @@ Na pasta `backend`, crie um arquivo chamado:
 
 ---
 
-### 🔹 3.2 Adicionar conteúdo
+ 🔹 3.2 Adicionar conteúdo
 
 Dentro do `.env`, coloque:
 
@@ -62,7 +104,7 @@ FIREBASE_CREDENTIALS=./src/config/serviceAccountKey.json
 
 ---
 
-## 4. Configurar credenciais do Firebase
+### 4. Configurar credenciais do Firebase
 
 ### ⚠️ IMPORTANTE
 
@@ -96,7 +138,7 @@ backend/
 
 ---
 
-## 5. Rodar o projeto
+### 5. Rodar o projeto
 
 ```bash
 uvicorn main:app --reload
@@ -110,7 +152,7 @@ http://127.0.0.1:8000
 
 ---
 
-# 🔐 Segurança (MUITO IMPORTANTE)
+### 🔐 Segurança (MUITO IMPORTANTE)
 
 ## ❌ NUNCA FAÇA
 
