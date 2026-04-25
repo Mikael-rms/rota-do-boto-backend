@@ -143,7 +143,14 @@ backend/
 ### 5. Rodar o projeto
 
 ```bash
-uvicorn main:app --reload
+uvicorn src.main:app --reload
+```
+
+### ATENÇÂO!!
+Caso o .env não esteja sendo lido, adicione esse código no **`firebase.py`**
+
+```bash
+print("PATH:", path)
 ```
 
 A API estará disponível em:
