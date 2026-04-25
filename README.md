@@ -1,7 +1,7 @@
 # 🚤 Rota do Boto - Backend
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge\&logo=python\&logoColor=white)](https://docs.python.org/3/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688?style=for-the-badge\&logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-20232A?style=for-the-badge\&logo=python\&logoColor=white)](https://docs.python.org/3/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-38B2AC?style=for-the-badge\&logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=for-the-badge\&logo=firebase\&logoColor=black)](https://firebase.google.com/docs/firestore)
 
 Este é o backend do projeto **Rota do Boto**, desenvolvido com FastAPI e integrado ao Firebase (Firestore).
