@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from config.firebase import db
+from src.config.firebase import db
 
 app = FastAPI()
 
