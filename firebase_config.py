@@ -1,19 +1,20 @@
 import os
+from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials, firestore
-from dotenv import load_dotenv
 
-load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-key_path = os.getenv("FIREBASE_KEY_PATH")
+path = os.getenv("FIREBASE_KEY_PATH")
 
-if not key_path:
+print("DEBUG PATH:", path)  
+
+if not path:
     raise ValueError("FIREBASE_KEY_PATH not set in .env")
 
-cred = credentials.Certificate(os.path.join(BASE_DIR, key_path))
-
+cred = credentials.Certificate(os.path.join(BASE_DIR, path))
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()

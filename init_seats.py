@@ -1,5 +1,5 @@
 from firebase_config import db
-
+#cria as lanchas na database
 def create_seats():
     seats = {}
 
@@ -11,7 +11,7 @@ def create_seats():
         "seats": seats
     })
 
-    print("trip1 created with seats S1–S40")
+    
 
 if __name__ == "__main__":
     create_seats()
