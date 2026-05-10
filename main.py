@@ -1,8 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 import firebase_service as fb
-from models import SelectSeatsRequest, ConfirmPaymentRequest, CancelOrderRequest
+from models import (
+    SelectSeatsRequest,
+    ConfirmPaymentRequest,
+    CancelOrderRequest
+)
 
 app = FastAPI()
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/trips/{trip_id}/{date}/seats")
 def seats(trip_id: str, date: str):
@@ -10,12 +25,25 @@ def seats(trip_id: str, date: str):
 
 @app.post("/reserve")
 def reserve(data: SelectSeatsRequest):
-    return fb.reserve_seats(data.trip_id, data.date, data.user_id, data.seats)
+    return fb.reserve_seats(
+        data.trip_id,
+        data.date,
+        data.user_id,
+        data.seats
+    )
 
 @app.post("/confirm")
 def confirm(data: ConfirmPaymentRequest):
-    return fb.confirm_payment(data.order_id, data.trip_id, data.date)
+    return fb.confirm_payment(
+        data.order_id,
+        data.trip_id,
+        data.date
+    )
 
 @app.post("/cancel")
 def cancel(data: CancelOrderRequest):
-    return fb.cancel_order(data.order_id, data.trip_id, data.date)
+    return fb.cancel_order(
+        data.order_id,
+        data.trip_id,
+        data.date
+    )
