@@ -1,6 +1,6 @@
 # Credenciais
-backend/.env
-backend/src/config/serviceAccountKey.json
+.env
+firebasekey.json
 
 # Python
 __pycache__/
