@@ -1,3 +1,4 @@
+from google.cloud import firestore
 import time
 import uuid
 import threading
@@ -31,7 +32,112 @@ def get_trip_seats(trip_id: str, date: str):
         return {"error": f"get_trip_seats failed: {e}"}
 
 
-def reserve_seats(trip_id: str, date: str, user_id: str, seats: list[str], auto_cancel_seconds: int = 180):
+def reserve_seats(
+    trip_id: str,
+    date: str,
+    user_id: str,
+    seats: list[str],
+    auto_cancel_seconds: int = 180
+):
+    try:
+        trip_ref = _trip_ref(trip_id, date)
+
+        transaction = db.transaction()
+
+        @firestore.transactional
+        def reserve_in_transaction(transaction, trip_ref):
+
+            trip_doc = trip_ref.get(transaction=transaction)
+
+            if not trip_doc.exists:
+                return {"error": "Trip/date not found"}
+
+            trip_data = trip_doc.to_dict() or {}
+
+            seats_data = trip_data.get("seats", {})
+
+            if not isinstance(seats_data, dict):
+                return {
+                    "error": "Invalid trips format"
+                }
+
+            # verifica disponibilidade
+            for s in seats:
+                status = seats_data.get(s)
+
+                if status != "available":
+                    return {
+                        "error": f"{s} not available (status={status})"
+                    }
+
+            # reserva
+            for s in seats:
+                seats_data[s] = "reserved"
+
+            transaction.update(trip_ref, {
+                "seats": seats_data
+            })
+
+            return {"success": True}
+
+        result = reserve_in_transaction(
+            transaction,
+            trip_ref
+        )
+
+        if result.get("error"):
+            return result
+
+        # cria pedido
+        order_id = str(uuid.uuid4())
+
+        order_ref = _order_ref(
+            trip_id,
+            date,
+            order_id
+        )
+
+        created_at = time.time()
+
+        expires_at = created_at + auto_cancel_seconds
+
+        order_ref.set({
+            "order_id": order_id,
+            "trip_id": trip_id,
+            "date": date,
+            "user_id": user_id,
+            "seats": seats,
+            "status": "pending",
+            "created_at": created_at,
+            "expires_at": expires_at,
+        })
+
+        # thread auto cancel
+        t = threading.Thread(
+            target=auto_cancel_order,
+            args=(
+                order_id,
+                trip_id,
+                date,
+                auto_cancel_seconds
+            ),
+            daemon=True
+        )
+
+        t.start()
+
+        return {
+            "message": "Reservation created",
+            "order_id": order_id,
+            "expires_at": expires_at
+        }
+
+    except Exception as e:
+        traceback.print_exc()
+
+        return {
+            "error": f"reserve_seats failed: {e}"
+        }
     try:
         trip_ref = _trip_ref(trip_id, date)
         trip_doc = trip_ref.get()
@@ -78,7 +184,13 @@ def reserve_seats(trip_id: str, date: str, user_id: str, seats: list[str], auto_
         )
         t.start()
 
-        return {"message": "Reservation created", "order_id": order_id}
+        expires_at = time.time() + auto_cancel_seconds
+
+        return {
+            "message": "Reservation created",
+            "order_id": order_id,
+            "expires_at": expires_at
+        }
 
     except Exception as e:
         # this prevents silent 500s
