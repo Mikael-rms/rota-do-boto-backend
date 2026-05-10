@@ -1,7 +1,6 @@
 from google.cloud import firestore
 import time
 import uuid
-import threading
 import traceback
 from firebase_config import db
 
@@ -105,9 +104,9 @@ def reserve_seats(
             order_id
         )
 
-        created_at = time.time()
+        created_at = int(time.time() * 1000)
 
-        expires_at = created_at + auto_cancel_seconds
+        expires_at = created_at + (auto_cancel_seconds * 1000)
 
         order_ref.set({
             "order_id": order_id,
@@ -119,20 +118,6 @@ def reserve_seats(
             "created_at": created_at,
             "expires_at": expires_at,
         })
-
-        # auto cancelamento
-        t = threading.Thread(
-            target=auto_cancel_order,
-            args=(
-                order_id,
-                trip_id,
-                date,
-                auto_cancel_seconds
-            ),
-            daemon=True
-        )
-
-        t.start()
 
         return {
             "message": "Reservation created",
@@ -260,53 +245,3 @@ def cancel_order(order_id: str, trip_id: str, date: str):
         return {
             "error": f"cancel_order failed: {e}"
         }
-
-
-def auto_cancel_order(
-    order_id: str,
-    trip_id: str,
-    date: str,
-    delay: int = 180
-):
-    try:
-        time.sleep(delay)
-
-        order_ref = _order_ref(
-            trip_id,
-            date,
-            order_id
-        )
-
-        order_doc = order_ref.get()
-
-        if not order_doc.exists:
-            print("[AUTO] Order not found:", order_id)
-            return
-
-        order_data = order_doc.to_dict() or {}
-
-        if order_data.get("status") != "pending":
-            print(
-                "[AUTO] Not pending anymore:",
-                order_id,
-                "status=",
-                order_data.get("status")
-            )
-            return
-
-        result = cancel_order(
-            order_id,
-            trip_id,
-            date
-        )
-
-        print(
-            "[AUTO] Auto-cancel result:",
-            order_id,
-            result
-        )
-
-    except Exception:
-        print("[AUTO ERROR] crashed:")
-
-        traceback.print_exc()
