@@ -106,7 +106,7 @@ def reserve_seats(
 
         created_at = int(time.time() * 1000)
 
-        expires_at = created_at + (auto_cancel_seconds * 1000)
+        expires_at = created_at + (180 * 1000)
 
         order_ref.set({
             "order_id": order_id,
