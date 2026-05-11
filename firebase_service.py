@@ -145,6 +145,16 @@ def confirm_payment(order_id: str, trip_id: str, date: str):
 
         order_data = order_doc.to_dict() or {}
 
+        # bloqueia pedido cancelado/expirado
+        if order_data.get("status") == "cancelled":
+            return {"error": "Order expired or cancelled"}
+
+        # bloqueia pagamento após expiração
+        expires_at = order_data.get("expires_at", 0)
+
+        if int(time.time() * 1000) > expires_at:
+            return {"error": "Order expired"}
+
         if order_data.get("status") == "paid":
             return {"message": "Already paid"}
 
@@ -188,7 +198,6 @@ def confirm_payment(order_id: str, trip_id: str, date: str):
         return {
             "error": f"confirm_payment failed: {e}"
         }
-
 
 def cancel_order(order_id: str, trip_id: str, date: str):
     try:
