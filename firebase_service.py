@@ -49,6 +49,29 @@ def reserve_seats(
     try:
         trip_ref = _trip_ref(trip_id, date)
 
+        # verifica se usuário já possui reserva pendente
+        existing_orders = (
+            db.collection("orders")
+            .document(trip_id)
+            .collection(date)
+            .where("user_id", "==", user_id)
+            .where("status", "==", "pending")
+            .stream()
+        )
+
+        now = int(time.time() * 1000)
+
+        for doc in existing_orders:
+            order = doc.to_dict() or {}
+
+            expires_at = order.get("expires_at", 0)
+
+            # se ainda não expirou, impede nova reserva
+            if now < expires_at:
+                return {
+                    "error": "User already has an active reservation"
+                }
+
         transaction = db.transaction()
 
         @firestore.transactional
@@ -133,7 +156,6 @@ def reserve_seats(
             "error": f"reserve_seats failed: {e}"
         }
 
-
 def confirm_payment(order_id: str, trip_id: str, date: str):
     try:
         order_ref = _order_ref(trip_id, date, order_id)
@@ -146,8 +168,13 @@ def confirm_payment(order_id: str, trip_id: str, date: str):
         order_data = order_doc.to_dict() or {}
 
         # bloqueia pedido cancelado/expirado
-        if order_data.get("status") == "cancelled":
-            return {"error": "Order expired or cancelled"}
+        status = order_data.get("status")
+
+        if status == "paid":
+            return {"error": "Cannot cancel a paid order"}
+
+        if status == "cancelled":
+            return {"message": "Order already cancelled"}
 
         # bloqueia pagamento após expiração
         expires_at = order_data.get("expires_at", 0)
