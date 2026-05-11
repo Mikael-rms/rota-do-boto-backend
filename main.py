@@ -7,6 +7,15 @@ from models import (
     ConfirmPaymentRequest,
     CancelOrderRequest
 )
+import threading
+
+from tasks.expiration_worker import (
+    release_expired_orders
+)
+threading.Thread(
+    target=release_expired_orders,
+    daemon=True
+).start()
 
 app = FastAPI()
 
