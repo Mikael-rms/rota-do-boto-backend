@@ -5,7 +5,12 @@ class SelectSeatsRequest(BaseModel):
     trip_id: str
     date: str
     user_id: str
-    seats: List[str]
+    seats: list[str]
+
+    price: float
+    origem: str
+    destino: str
+    nome: str
 
 class ConfirmPaymentRequest(BaseModel):
     order_id: str

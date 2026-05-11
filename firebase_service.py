@@ -44,6 +44,10 @@ def reserve_seats(
     date: str,
     user_id: str,
     seats: list[str],
+    price: float,
+    origem: str,
+    destino: str,
+    nome: str,
     auto_cancel_seconds: int = 180
 ):
     try:
@@ -137,6 +141,12 @@ def reserve_seats(
             "date": date,
             "user_id": user_id,
             "seats": seats,
+
+            "price": price,
+            "origem": origem,
+            "destino": destino,
+            "nome": nome,
+
             "status": "pending",
             "created_at": created_at,
             "expires_at": expires_at,

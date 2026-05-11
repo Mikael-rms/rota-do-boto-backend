@@ -38,8 +38,13 @@ def reserve(data: SelectSeatsRequest):
         data.trip_id,
         data.date,
         data.user_id,
-        data.seats
+        data.seats,
+        data.price,
+        data.origem,
+        data.destino,
+        data.nome
     )
+    
 
 @app.post("/confirm")
 def confirm(data: ConfirmPaymentRequest):
