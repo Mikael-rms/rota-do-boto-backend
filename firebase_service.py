@@ -282,3 +282,47 @@ def cancel_order(order_id: str, trip_id: str, date: str):
         return {
             "error": f"cancel_order failed: {e}"
         }
+def get_user_orders(user_id: str):
+    try:
+        orders = []
+
+        trips_ref = db.collection("orders").stream()
+
+        for trip_doc in trips_ref:
+
+            date_collections = (
+                db.collection("orders")
+                .document(trip_doc.id)
+                .collections()
+            )
+
+            for date_collection in date_collections:
+
+                docs = (
+                    date_collection
+                    .where("user_id", "==", user_id)
+                    .where("status", "==", "paid")
+                    .stream()
+                )
+
+                for doc in docs:
+                    data = doc.to_dict()
+
+                    orders.append({
+                        "id": doc.id,
+                        **data
+                    })
+
+        orders.sort(
+            key=lambda x: x.get("paid_at", 0),
+            reverse=True
+        )
+
+        return orders
+
+    except Exception as e:
+        traceback.print_exc()
+
+        return {
+            "error": f"get_user_orders failed: {e}"
+        }

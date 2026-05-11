@@ -56,3 +56,7 @@ def cancel(data: CancelOrderRequest):
         data.trip_id,
         data.date
     )
+
+@app.get("/orders/{user_id}")
+def get_orders(user_id: str):
+    return fb.get_user_orders(user_id)
