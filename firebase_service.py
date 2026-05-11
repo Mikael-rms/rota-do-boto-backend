@@ -122,7 +122,8 @@ def reserve_seats(
         return {
             "message": "Reservation created",
             "order_id": order_id,
-            "expires_at": expires_at
+            "expires_at": expires_at,
+            "duration": auto_cancel_seconds
         }
 
     except Exception as e:
