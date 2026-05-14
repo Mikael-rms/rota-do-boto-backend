@@ -6,6 +6,8 @@ class SelectSeatsRequest(BaseModel):
     date: str
     user_id: str
     seats: list[str]
+    tempo: str = ""      
+    dataPartida: str = ""
 
     price: float
     origem: str
