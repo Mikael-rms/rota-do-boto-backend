@@ -43,8 +43,7 @@ def reserve(data: SelectSeatsRequest):
         data.origem,
         data.destino,
         data.nome,
-        data.tempo,     
-        data.dataPartida,
+        data.tempo,
     )
     
 

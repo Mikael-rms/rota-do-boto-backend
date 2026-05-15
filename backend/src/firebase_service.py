@@ -48,8 +48,7 @@ def reserve_seats(
     origem: str,
     destino: str,
     nome: str,
-    tempo: str = "",    
-    dataPartida: str = "", 
+    tempo: str = "",
     auto_cancel_seconds: int = 180
 ):
     try:
@@ -150,7 +149,6 @@ def reserve_seats(
             "destino": destino,
             "nome": nome,
             "tempo": tempo,
-            "dataPartida": dataPartida,
 
             "status": "pending",
             "created_at": created_at,
