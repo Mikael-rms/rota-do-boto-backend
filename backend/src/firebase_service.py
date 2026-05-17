@@ -136,11 +136,6 @@ def reserve_seats(
 
         expires_at = created_at + (180 * 1000)
 
-        # garante que o documento da lancha existe de verdade (evita documento fantasma)
-        db.collection("orders").document(trip_id).set(
-            {"trip_id": trip_id}, merge=True
-        )
-
         order_ref.set({
             "order_id": order_id,
             "trip_id": trip_id,
