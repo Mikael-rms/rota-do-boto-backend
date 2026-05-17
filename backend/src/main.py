@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from firebase_admin import firestore
 
 from src import firebase_service as fb
 from src.models import (
@@ -66,3 +67,14 @@ def cancel(data: CancelOrderRequest):
 @app.get("/orders/{user_id}")
 def get_orders(user_id: str):
     return fb.get_user_orders(user_id)
+
+@app.delete("/admin/reset-orders")
+def reset_orders():
+    db = firestore.client()
+    
+    for trip_ref in db.collection("orders").list_documents():
+        for date_collection in trip_ref.collections():
+            for order in date_collection.stream():
+                order.reference.delete()  # apaga só o documento do pedido
+    
+    return {"message": "Todos os pedidos foram apagados!"}

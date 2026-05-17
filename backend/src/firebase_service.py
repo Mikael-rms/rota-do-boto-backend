@@ -136,6 +136,11 @@ def reserve_seats(
 
         expires_at = created_at + (180 * 1000)
 
+        # garante que o documento da lancha existe de verdade (evita documento fantasma)
+        db.collection("orders").document(trip_id).set(
+            {"trip_id": trip_id}, merge=True
+        )
+
         order_ref.set({
             "order_id": order_id,
             "trip_id": trip_id,
@@ -295,19 +300,16 @@ def cancel_order(order_id: str, trip_id: str, date: str):
         return {
             "error": f"cancel_order failed: {e}"
         }
+
 def get_user_orders(user_id: str):
     try:
         orders = []
 
-        trips_ref = db.collection("orders").stream()
+        # list_documents() retorna todos os documentos incluindo os fantasmas
+        trip_refs = db.collection("orders").list_documents()
 
-        for trip_doc in trips_ref:
-
-            date_collections = (
-                db.collection("orders")
-                .document(trip_doc.id)
-                .collections()
-            )
+        for trip_ref in trip_refs:
+            date_collections = trip_ref.collections()
 
             for date_collection in date_collections:
 
